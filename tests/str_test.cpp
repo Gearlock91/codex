@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Andreas Roghe
+// SPDX-License-Identifier: MIT
 #include <gtest/gtest.h>
 #include <codex/str.hpp>
 
