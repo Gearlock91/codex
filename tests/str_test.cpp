@@ -20,3 +20,13 @@ TEST(StrTrim, RemoveLeadingWithLeftTrim) {
 TEST(StrTrim, RemoveTrailingWithRightTrim) {
     EXPECT_EQ(codex::str::right_trim("   hello    "), "   hello");
 }
+
+TEST(StrManip, ToLower) {
+    EXPECT_EQ(codex::str::to_lower("HELLO"), "hello");
+    EXPECT_EQ(codex::str::to_lower("HeLlO"), "hello");
+}
+
+TEST(StrManip, ToUpper) {
+    EXPECT_EQ(codex::str::to_upper("hello"), "HELLO");
+    EXPECT_EQ(codex::str::to_upper("HeLlO"), "HELLO");
+}

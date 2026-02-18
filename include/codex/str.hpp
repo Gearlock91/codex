@@ -1,5 +1,6 @@
 #ifndef CODEX_STR_HPP
 #define CODEX_STR_HPP
+#include <algorithm>
 
 namespace codex::str {
     /**
@@ -40,7 +41,9 @@ namespace codex::str {
      * @return The lowercase string.
      */
     inline auto to_lower(const std::string& str) {
-        return "to be implemented";
+        std::string tmp;
+        std::ranges::transform(str, std::back_inserter(tmp), ::tolower);
+        return tmp;
     }
     /**
      * Convert str to uppercase.
@@ -48,7 +51,9 @@ namespace codex::str {
      * @return The uppercase string.
      */
     inline auto to_upper(const std::string& str) {
-        return "to be implemented";
+        std::string tmp;
+        std::ranges::transform(str, back_inserter(tmp), ::toupper);
+        return tmp;
     }
     /**
      * Remove all whitespace characters from a string.
