@@ -1,19 +1,26 @@
 # Overview
 
-This is a C++ 23 library called `codex`. As of now, there is only the chapter str, which is a helper for common string
-operations. All code is tested with the Google Test framework. The main philosophy is that the expected return value
+This is a C++ 23 header-only library called `codex`. All functionality is sorted into what I have decided to call them "
+Chapters." Each chapter is directed to focus on their area, e.g. `str.hpp` is focusing on string manipulations. As of
+now, there is only the chapter str, which is a helper for common string
+operations. All code is tested with the Google Test framework. The main philosophy is that the return value
 could either be the actual value expected or an error code for failure using the `expected` class from the `expected`
-header. The library is designed to be easy to use and understand, with clear and concise documentation for each function.
+header. The library is designed to be straightforward to use and understand, with clear and concise documentation for
+each function. No dependencies are required. No exceptions are thrown.
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Installation](#installation)
 - [Usage](#usage)
 - [License](#license)
 
 ## Installation
+
 ## Usage
+
 ## License
+
 MIT License
 
 Copyright (c) 2026 Andreas Roghe
