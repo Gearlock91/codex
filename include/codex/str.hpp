@@ -1,6 +1,9 @@
 #ifndef CODEX_STR_HPP
 #define CODEX_STR_HPP
 #include <algorithm>
+#include <expected>
+
+#include "core.hpp"
 
 namespace codex::str {
     /**
@@ -101,12 +104,13 @@ namespace codex::str {
         return "to be implemented";
     }
     /**
-     * Convert float to string.
+     * Convert float to string with specified precision.
      * @param f The float to convert.
-     * @return The string representation of the float.
+     * @param precision The number of decimal places to include.
+     * @return The expected string representation of the float or an error code.
      */
-    inline auto ftoa(float f) {
-        return "to be implemented";
+    inline std::expected<std::string, codex::ERROR> to_string(float f, const int precision) {
+        return std::unexpected(codex::ERROR::NOT_IMPLEMENTED);
     }
 
 }
