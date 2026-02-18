@@ -1,5 +1,4 @@
-#ifndef CODEX_STR_HPP
-#define CODEX_STR_HPP
+#pragma once
 #include <algorithm>
 #include <expected>
 
@@ -68,7 +67,7 @@ namespace codex::str {
      */
     inline auto remove_whitespace(const std::string &str) {
         std::string tmp = str;
-        tmp.erase(remove_if(tmp.begin(), tmp.end(), ::isspace), tmp.end());
+        tmp.erase(std::ranges::remove_if(tmp, ::isspace).begin(), tmp.end());
         return tmp;
     }
 
@@ -150,4 +149,3 @@ namespace codex::str {
         return std::unexpected(codex::StatusCode::NOT_IMPLEMENTED);
     }
 }
-#endif //CODEX_STR_HPP

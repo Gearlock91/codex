@@ -1,6 +1,4 @@
-
-#ifndef CODEX_CORE_HPP
-#define CODEX_CORE_HPP
+#pragma once
 
 namespace codex {
     enum class StatusCode {
@@ -11,5 +9,3 @@ namespace codex {
         UNKNOWN_ERROR = 4
     };
 }
-
-#endif //CODEX_CORE_HPP
