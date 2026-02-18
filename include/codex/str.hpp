@@ -6,44 +6,41 @@
 
 namespace codex::str {
     /**
-     * Trims leading and trailing whitespace from a string.
-     * @param str The input string to trim.
-     * @return The trimmed string.
-     */
-    inline auto trim(const std::string &str) {
-        std::string tmp = str;
-        tmp.erase(std::ranges::remove_if(tmp, ::isspace).begin(), tmp.end());
-        return tmp;
-    }
-
-    /**
      * Trims leading whitespace from a string.
      * @param str the input string to trim.
      * @return The trimmed string.
      */
-    inline auto left_trim(const std::string &str) {
+    [[nodiscard]] inline auto left_trim(const std::string &str) {
         std::string tmp = str;
         tmp.erase(tmp.begin(), std::ranges::find_if_not(tmp, ::isspace));
         return tmp;
     }
-
     /**
      * Trims trailing whitespace from a string.
      * @param str the input string to trim.
      * @return The trimmed string.
      */
-    inline auto right_trim(const std::string &str) {
+    [[nodiscard]] inline auto right_trim(const std::string &str) {
         std::string tmp = str;
         tmp.erase(std::ranges::find_if_not(tmp.rbegin(), tmp.rend(), ::isspace).base(), tmp.end());
         return tmp;
     }
-
+    /**
+     * Trims leading and trailing whitespace from a string.
+     * @param str The input string to trim.
+     * @return The trimmed string.
+     */
+    [[nodiscard]] inline auto trim(const std::string &str) {
+        std::string tmp = str;
+        tmp = str::right_trim(str::left_trim(tmp));
+        return tmp;
+    }
     /**
      * Convert str to lowercase.
      * @param str The input string to convert.
      * @return The lowercase string.
      */
-    inline auto to_lower(const std::string &str) {
+    [[nodiscard]] inline auto to_lower(const std::string &str) {
         std::string tmp;
         std::ranges::transform(str, std::back_inserter(tmp), ::tolower);
         return tmp;
@@ -54,7 +51,7 @@ namespace codex::str {
      * @param str The input string to convert.
      * @return The uppercase string.
      */
-    inline auto to_upper(const std::string &str) {
+    [[nodiscard]] inline auto to_upper(const std::string &str) {
         std::string tmp;
         std::ranges::transform(str, back_inserter(tmp), ::toupper);
         return tmp;
@@ -65,7 +62,7 @@ namespace codex::str {
      * @param str The input string to process.
      * @return The string with whitespace removed.
      */
-    inline auto remove_whitespace(const std::string &str) {
+    [[nodiscard]] inline auto remove_whitespace(const std::string &str) {
         std::string tmp = str;
         tmp.erase(std::ranges::remove_if(tmp, ::isspace).begin(), tmp.end());
         return tmp;
@@ -77,7 +74,7 @@ namespace codex::str {
      * @param delimiter The character used as a delimiter.
      * @return A vector of substrings, return StatusCode::NOTHING_TO_DO if no split could be made.
      */
-    inline std::expected<std::vector<std::string>, StatusCode> split(const std::string &str, const char delimiter) {
+    [[nodiscard]] inline std::expected<std::vector<std::string>, StatusCode> split(const std::string &str, const char delimiter) {
         std::vector<std::string> result;
         std::stringstream ss(str);
         while (ss.good()) {
@@ -98,7 +95,7 @@ namespace codex::str {
      * @param delimiter The character used as a delimiter.
      * @return The joined string, if no join is performed, returns StatusCode::NOTHING_TO_DO.
      */
-    inline std::expected<std::string, StatusCode> join(const std::vector<std::string> &strs, const char delimiter) {
+    [[nodiscard]] inline std::expected<std::string, StatusCode> join(const std::vector<std::string> &strs, const char delimiter) {
         std::string result;
         for (const std::string &s: strs) {
             result += s != strs.back() ? s + delimiter : s;
@@ -114,7 +111,7 @@ namespace codex::str {
      * @param substr The substring to search for.
      * @return Number of times the substring is found, if string is empty it returns StatusCode::NOTHING_TO_DO. If the substring is empty, it returns StatusCode::INVALID_INPUT.
      */
-    inline std::expected<int, StatusCode> contains_mult(const std::string &str, const std::string &substr) {
+    [[nodiscard]] inline std::expected<int, StatusCode> contains_mult(const std::string &str, const std::string &substr) {
         if (str.empty())
             return std::unexpected(StatusCode::NOTHING_TO_DO);
         if (substr.empty())
@@ -127,7 +124,6 @@ namespace codex::str {
         }
         return count;
     }
-
     /**
      * Replace all occurrences of a substring with another substring in a string.
      * @param str The input string to modify.
@@ -135,17 +131,16 @@ namespace codex::str {
      * @param to The substring to replace with.
      * @return The modified string with replacements made.
      */
-    inline auto replace_all(const std::string &str, const std::string &from, const std::string &to) {
+    [[nodiscard]] inline auto replace_all(const std::string &str, const std::string &from, const std::string &to) {
         return "to be implemented";
     }
-
     /**
      * Convert float to string with specified precision.
      * @param f The float to convert.
      * @param precision The number of decimal places to include.
      * @return The expected string representation of the float or an error code.
      */
-    inline std::expected<std::string, codex::StatusCode> to_string(float f, const int precision) {
+    [[nodiscard]] inline std::expected<std::string, codex::StatusCode> to_string(float f, const int precision) {
         return std::unexpected(codex::StatusCode::NOT_IMPLEMENTED);
     }
 }
