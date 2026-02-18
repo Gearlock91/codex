@@ -9,6 +9,10 @@ TEST(StrTrim, RemovesTrailingSpaces) {
     EXPECT_EQ(codex::str::trim("hello   "), "hello");
 }
 
+TEST(StrTrim, RemoveSpaces) {
+    EXPECT_EQ(codex::str::trim("      "), "");
+}
+
 TEST(StrTrim, RemovesBothTrailingAndLeadingSpaces) {
     EXPECT_EQ(codex::str::trim("   hello   "), "hello");
 }
