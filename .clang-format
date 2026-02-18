@@ -5,7 +5,7 @@ AlignAfterOpenBracket: true
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 BinPackArguments: false
-ColumnLimit: 80
+ColumnLimit: 120
 NamespaceIndentation: All
 IncludeBlocks:   Preserve
 IncludeCategories:
@@ -19,4 +19,4 @@ IncludeCategories:
     Priority:        1
 IndentWidth: 4
 SortIncludes: true
-Standard:   c++17
+Standard:   Latest
