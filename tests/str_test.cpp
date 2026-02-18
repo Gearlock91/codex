@@ -51,3 +51,12 @@ TEST(Str, JoinString) {
     EXPECT_EQ(codex::str::join({"hello", "world", "again"}, ',').value(), "hello,world,again");
     EXPECT_EQ(codex::str::join({}, ',').error(), codex::StatusCode::NOTHING_TO_DO);
 }
+
+TEST(Str, FindSubstr) {
+    EXPECT_EQ(codex::str::contains_mult("Hello World", "World").value(), 1);
+    EXPECT_EQ(codex::str::contains_mult("Hello World", "Hello").value(), 1);
+    EXPECT_EQ(codex::str::contains_mult("Hello World", "Goodbye").value(), 0);
+    EXPECT_EQ(codex::str::contains_mult("Hello World", "").error(), codex::StatusCode::INVALID_INPUT);
+    EXPECT_EQ(codex::str::contains_mult("Another one of Hello World To Be sure it's a Hello, with a Heartily hello", "hello").value(), 3);
+    EXPECT_EQ(codex::str::contains_mult("", "Goodbye").error(), codex::StatusCode::NOTHING_TO_DO);
+}
