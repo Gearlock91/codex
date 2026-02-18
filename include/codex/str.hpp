@@ -8,7 +8,9 @@ namespace codex::str {
      * @return The trimmed string.
      */
     inline auto trim(const std::string& str) {
-        return "to be implemented";
+        std::string tmp = str;
+        tmp.erase(remove_if(tmp.begin(), tmp.end(), ::isspace), tmp.end());
+        return tmp;
     }
 
     /**
@@ -17,7 +19,9 @@ namespace codex::str {
      * @return The trimmed string.
      */
     inline auto left_trim(const std::string&str) {
-        return "to be implemented";
+        std::string tmp = str;
+        tmp.erase(tmp.begin(), std::ranges::find_if_not(tmp, ::isspace));
+        return tmp;
     }
 
     /**
@@ -26,7 +30,9 @@ namespace codex::str {
      * @return The trimmed string.
      */
     inline auto right_trim(const std::string&str) {
-        return "to be implemented";
+        std::string tmp = str;
+        tmp.erase(std::ranges::find_if_not(tmp.rbegin(), tmp.rend(), ::isspace).base(), tmp.end());
+        return tmp;
     }
     /**
      * Convert str to lowercase.
