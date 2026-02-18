@@ -3,6 +3,7 @@
 
 TEST(Str, RemovesLeadingSpaces) {
     EXPECT_EQ(codex::str::trim("   hello"), "hello");
+    EXPECT_EQ(codex::str::trim("    hel llo  "), "hel llo");
 }
 
 TEST(Str, RemovesTrailingSpaces) {
