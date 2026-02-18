@@ -64,25 +64,44 @@ namespace codex::str {
      * @return The string with whitespace removed.
      */
     inline auto remove_whitespace(const std::string& str) {
-        return "to be implemented";
+        std::string tmp = str;
+        tmp.erase(remove_if(tmp.begin(), tmp.end(), ::isspace), tmp.end());
+        return tmp;
     }
     /**
      * Split a string into substrings based on a delimiter.
      * @param str The input string to split.
      * @param delimiter The character used as a delimiter.
-     * @return A vector of substrings.
+     * @return A vector of substrings, return StatusCode::NOTHING_TO_DO if no split could be made.
      */
-    inline auto split(const std::string& str, char delimiter) {
-        return "to be implemented";
+    inline std::expected<std::vector<std::string>, StatusCode> split(const std::string& str, const char delimiter) {
+        std::vector<std::string> result;
+        std::stringstream ss(str);
+        while (ss.good()) {
+            std::string substr;
+            std::getline(ss, substr, delimiter);
+            if (substr != str && !substr.empty()) {
+                result.push_back(substr);
+            }
+        }
+        if (result.empty())
+            return std::unexpected(StatusCode::NOTHING_TO_DO);
+        return result;
     }
     /**
      * Join a vector of strings into a single string with a delimiter.
      * @param strs The vector of strings to join.
      * @param delimiter The character used as a delimiter.
-     * @return The joined string.
+     * @return The joined string, if no join is performed, returns StatusCode::NOTHING_TO_DO.
      */
-    inline auto join(const std::vector<std::string>& strs, char delimiter) {
-        return "to be implemented";
+    inline std::expected<std::string, StatusCode> join(const std::vector<std::string>& strs,const char delimiter) {
+        std::string result;
+        for (const std::string& s : strs) {
+            result += s != strs.back() ? s + delimiter : s;
+        }
+        if (result.empty())
+            return std::unexpected(StatusCode::NOTHING_TO_DO);
+        return result;
     }
     /**
      * Check if a string contains a substring.
@@ -109,8 +128,8 @@ namespace codex::str {
      * @param precision The number of decimal places to include.
      * @return The expected string representation of the float or an error code.
      */
-    inline std::expected<std::string, codex::ERROR> to_string(float f, const int precision) {
-        return std::unexpected(codex::ERROR::NOT_IMPLEMENTED);
+    inline std::expected<std::string, codex::StatusCode> to_string(float f, const int precision) {
+        return std::unexpected(codex::StatusCode::NOT_IMPLEMENTED);
     }
 
 }
