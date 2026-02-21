@@ -68,12 +68,14 @@ TEST(Str, FindSubstr) {
 }
 
 TEST(Str, ReplaceAll) {
-    EXPECT_EQ(codex::str::replace_all("Hello World", "World", "Earth"), "Hello Earth");
-    EXPECT_EQ(codex::str::replace_all("Hello World", "Hello", "Goodbye"), "Goodbye World");
-    EXPECT_EQ(codex::str::replace_all("", "Goodbye", "Hello"), "");
+    EXPECT_EQ(codex::str::replace_all("Hello World", "World", "Earth").value(), "Hello Earth");
+    EXPECT_EQ(codex::str::replace_all("Hello World", "Hello", "Goodbye").value(), "Goodbye World");
+    EXPECT_EQ(codex::str::replace_all("", "Goodbye", "Hello").value(), "");
     EXPECT_EQ(
         codex::str::replace_all("Another one bites to dust with a super string so that all A are replaced", "a", "s"),
         "Another one bites to dust with s super string so thst sll A sre replsced");
+    EXPECT_EQ(codex::str::replace_all("Hello World", "", "Goodbye").error(), codex::StatusCode::INVALID_INPUT);
+    EXPECT_EQ(codex::str::replace_all("aa", "aa", "a"),"a");
 }
 
 TEST(Str, DoubleToStringPositive) {
@@ -83,6 +85,8 @@ TEST(Str, DoubleToStringPositive) {
     EXPECT_EQ(codex::str::to_string(d, 10).error(), codex::StatusCode::INVALID_INPUT);
     EXPECT_EQ(codex::str::to_string(d, -1).error(), codex::StatusCode::INVALID_INPUT);
     EXPECT_EQ(codex::str::to_string(d, 0).error(), codex::StatusCode::INVALID_INPUT);
+    EXPECT_EQ(codex::str::to_string(d, 1).value(), "1.2");
+    EXPECT_EQ(codex::str::to_string(d, 5).value(), "1.23457");
 }
 
 TEST(Str, DoubleToStringNegative) {

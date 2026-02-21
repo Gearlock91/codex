@@ -5,6 +5,14 @@
 #include <expected>
 #include <cmath>
 #include <iomanip>
+#include <string>
+#include <string_view>
+#include <vector>
+#include <sstream>
+#include <ranges>
+#include <cctype>
+#include <limits>
+#include <iterator>
 
 #include "core.hpp"
 
@@ -14,9 +22,10 @@ namespace codex::str {
      * @param str the input string to trim.
      * @return The trimmed string.
      */
-    [[nodiscard]] inline auto left_trim(const std::string& str) {
-        std::string tmp = str;
-        tmp.erase(tmp.begin(), std::ranges::find_if_not(tmp, ::isspace));
+    [[nodiscard]] inline auto left_trim(const std::string_view str) {
+        std::string tmp(str);
+        tmp.erase(tmp.begin(),
+                  std::ranges::find_if_not(tmp, [](const char c) { return ::isspace(static_cast<unsigned char>(c)); }));
         return tmp;
     }
 
@@ -25,9 +34,14 @@ namespace codex::str {
      * @param str the input string to trim.
      * @return The trimmed string.
      */
-    [[nodiscard]] inline auto right_trim(const std::string& str) {
-        std::string tmp = str;
-        tmp.erase(std::ranges::find_if_not(tmp.rbegin(), tmp.rend(), ::isspace).base(), tmp.end());
+    [[nodiscard]] inline auto right_trim(const std::string_view str) {
+        std::string tmp(str);
+        tmp.erase(std::ranges::find_if_not(tmp.rbegin(),
+                                           tmp.rend(),
+                                           [](const char c) {
+                                               return ::isspace(static_cast<unsigned char>(c));
+                                           }).base(),
+                  tmp.end());
         return tmp;
     }
 
@@ -36,8 +50,8 @@ namespace codex::str {
      * @param str The input string to trim.
      * @return The trimmed string.
      */
-    [[nodiscard]] inline auto trim(const std::string& str) {
-        std::string tmp = str;
+    [[nodiscard]] inline auto trim(const std::string_view str) {
+        std::string tmp(str);
         tmp = str::right_trim(str::left_trim(tmp));
         return tmp;
     }
@@ -47,10 +61,17 @@ namespace codex::str {
      * @param str The input string to convert.
      * @return The lowercase string.
      */
-    [[nodiscard]] inline auto to_lower(const std::string& str) {
-        std::string tmp;
-        std::ranges::transform(str, std::back_inserter(tmp), ::tolower);
-        return tmp;
+    [[nodiscard]] inline std::expected<std::string, codex::StatusCode> to_lower(const std::string_view str) {
+        try {
+            std::string tmp;
+            tmp.reserve(str.size());
+            std::ranges::transform(str,
+                                   std::back_inserter(tmp),
+                                   [](const char c) { return std::tolower(static_cast<unsigned char>(c)); });
+            return tmp;
+        } catch (const std::length_error&) {
+            return std::unexpected(codex::StatusCode::BAD_REQUEST);
+        }
     }
 
     /**
@@ -58,10 +79,17 @@ namespace codex::str {
      * @param str The input string to convert.
      * @return The uppercase string.
      */
-    [[nodiscard]] inline auto to_upper(const std::string& str) {
-        std::string tmp;
-        std::ranges::transform(str, back_inserter(tmp), ::toupper);
-        return tmp;
+    [[nodiscard]] inline std::expected<std::string, codex::StatusCode> to_upper(const std::string_view str) {
+        try {
+            std::string tmp;
+            tmp.reserve(str.size());
+            std::ranges::transform(str,
+                                   back_inserter(tmp),
+                                   [](const char c) { return std::toupper(static_cast<unsigned char>(c)); });
+            return tmp;
+        } catch (const std::length_error&) {
+            return std::unexpected(codex::StatusCode::INVALID_INPUT);
+        }
     }
 
     /**
@@ -69,9 +97,11 @@ namespace codex::str {
      * @param str The input string to process.
      * @return The string with whitespace removed.
      */
-    [[nodiscard]] inline auto remove_whitespace(const std::string& str) {
-        std::string tmp = str;
-        tmp.erase(std::ranges::remove_if(tmp, ::isspace).begin(), tmp.end());
+    [[nodiscard]] inline auto remove_whitespace(const std::string_view str) {
+        std::string tmp(str);
+        tmp.erase(
+            std::ranges::remove_if(tmp, [](const char c) { return ::isspace(static_cast<unsigned char>(c)); }).begin(),
+            tmp.end());
         return tmp;
     }
 
@@ -79,22 +109,29 @@ namespace codex::str {
      * Split a string into substrings based on a delimiter.
      * @param str The input string to split.
      * @param delimiter The character used as a delimiter.
-     * @return A vector of substrings, return StatusCode::NOTHING_TO_DO if no split could be made.
+     * @return A vector of substrings, return StatusCode::NOTHING_TO_DO if no split could be made. Otherwise, a StatusCode::BAD_REQUEST is returned
      */
     [[nodiscard]] inline std::expected<std::vector<std::string>, StatusCode> split(
-        const std::string& str, const char delimiter) {
-        std::vector<std::string> result;
-        std::stringstream ss(str);
-        while (ss.good()) {
-            std::string substr;
-            std::getline(ss, substr, delimiter);
-            if (substr != str && !substr.empty()) {
-                result.push_back(substr);
+        const std::string_view str, const char delimiter) {
+        try {
+            const std::string tmp(str);
+            std::vector<std::string> result;
+            std::stringstream ss(tmp);
+            while (ss.good()) {
+                std::string substr;
+                std::getline(ss, substr, delimiter);
+                if (substr != str && !substr.empty()) {
+                    result.push_back(substr);
+                }
             }
+            if (result.empty())
+                return std::unexpected(StatusCode::NOTHING_TO_DO);
+            return result;
+        } catch (std::length_error&) {
+            return std::unexpected(StatusCode::BAD_REQUEST);
+        } catch (std::bad_alloc&) {
+            return std::unexpected(StatusCode::BAD_REQUEST);
         }
-        if (result.empty())
-            return std::unexpected(StatusCode::NOTHING_TO_DO);
-        return result;
     }
 
     /**
@@ -118,33 +155,41 @@ namespace codex::str {
      * Check if a string contains a substring multiple times.
      * @param str The input string to search.
      * @param substr The substring to search for.
-     * @return Number of times the substring is found, if string is empty it returns StatusCode::NOTHING_TO_DO. If the substring is empty, it returns StatusCode::INVALID_INPUT.
+     * @return Number of times the substring is found, if string is empty it returns StatusCode::NOTHING_TO_DO. If the substring is empty, it returns StatusCode::INVALID_INPUT. Otherwise, StatusCode::BAD_REQUEST.
      */
     [[nodiscard]] inline std::expected<int, StatusCode>
-    contains_mult(const std::string& str, const std::string& substr) {
+    contains_mult(const std::string_view str, const std::string_view substr) {
         if (str.empty())
             return std::unexpected(StatusCode::NOTHING_TO_DO);
         if (substr.empty())
             return std::unexpected(StatusCode::INVALID_INPUT);
         size_t count = 0;
-        const std::string haystack = str::to_lower(str);
-        const std::string needle = str::to_lower(substr);
-        for (size_t i = 0; (i = haystack.find(needle, i)) != std::string::npos; ++i) {
-            ++count;
+        if (const auto haystack = str::to_lower(str); haystack.has_value()) {
+            if (const auto needle = str::to_lower(substr); needle.has_value()) {
+                for (size_t i = 0; (i = haystack.value().find(needle.value(), i)) != std::string::npos; ++i) {
+                    ++count;
+                }
+            } else {
+                return std::unexpected(StatusCode::BAD_REQUEST);
+            }
+        } else {
+            return std::unexpected(StatusCode::BAD_REQUEST);
         }
         return count;
     }
 
     /**
      * Replace all occurrences of a substring with another substring in a string.
-     * This function is case-insensitive and replaces all occurrences of 'from' with 'to' in 'str'.
+     * This function is case-sensitive and replaces all occurrences of 'from' with 'to' in 'str'.
      * @param str The input string to modify.
      * @param from The substring to replace.
      * @param to The substring to replace with.
      * @return The modified string with replacements made.
      */
-    [[nodiscard]] inline auto replace_all(const std::string& str, const std::string& from, const std::string& to) {
-        std::string tmp = str;
+    [[nodiscard]] inline std::expected<std::string, StatusCode> replace_all(
+        const std::string_view str, const std::string_view from, const std::string_view to) {
+        if (from.empty()) return std::unexpected(codex::StatusCode::INVALID_INPUT);
+        std::string tmp(str);
         while (tmp.find(from) != std::string::npos) {
             tmp.replace(tmp.find(from), from.length(), to);
         }
