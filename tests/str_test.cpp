@@ -75,3 +75,21 @@ TEST(Str, ReplaceAll) {
         codex::str::replace_all("Another one bites to dust with a super string so that all A are replaced", "a", "s"),
         "Another one bites to dust with s super string so thst sll A sre replsced");
 }
+
+TEST(Str, DoubleToStringPositive) {
+    constexpr float d = 1.23456789;
+    const std::string result = codex::str::to_string(d, 2).value();
+    EXPECT_EQ(result, "1.23");
+    EXPECT_EQ(codex::str::to_string(d, 10).error(), codex::StatusCode::INVALID_INPUT);
+    EXPECT_EQ(codex::str::to_string(d, -1).error(), codex::StatusCode::INVALID_INPUT);
+    EXPECT_EQ(codex::str::to_string(d, 0).error(), codex::StatusCode::INVALID_INPUT);
+}
+
+TEST(Str, DoubleToStringNegative) {
+    constexpr float d = -1.23456789;
+    const std::string result = codex::str::to_string(d, 2).value();
+    EXPECT_EQ(result, "-1.23");
+    EXPECT_EQ(codex::str::to_string(d, 10).error(), codex::StatusCode::INVALID_INPUT);
+    EXPECT_EQ(codex::str::to_string(d, -1).error(), codex::StatusCode::INVALID_INPUT);
+    EXPECT_EQ(codex::str::to_string(d, 0).error(), codex::StatusCode::INVALID_INPUT);
+}
