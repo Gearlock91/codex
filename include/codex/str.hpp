@@ -128,13 +128,18 @@ namespace codex::str {
     }
     /**
      * Replace all occurrences of a substring with another substring in a string.
+     * This function is case-insensitive and replaces all occurrences of 'from' with 'to' in 'str'.
      * @param str The input string to modify.
      * @param from The substring to replace.
      * @param to The substring to replace with.
      * @return The modified string with replacements made.
      */
     [[nodiscard]] inline auto replace_all(const std::string &str, const std::string &from, const std::string &to) {
-        return "to be implemented";
+        std::string tmp = str;
+        while (tmp.find(from) != std::string::npos) {
+            tmp.replace(tmp.find(from), from.length(), to);
+        }
+        return tmp;
     }
     /**
      * Convert float to string with specified precision.

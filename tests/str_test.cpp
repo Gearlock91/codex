@@ -60,6 +60,18 @@ TEST(Str, FindSubstr) {
     EXPECT_EQ(codex::str::contains_mult("Hello World", "Hello").value(), 1);
     EXPECT_EQ(codex::str::contains_mult("Hello World", "Goodbye").value(), 0);
     EXPECT_EQ(codex::str::contains_mult("Hello World", "").error(), codex::StatusCode::INVALID_INPUT);
-    EXPECT_EQ(codex::str::contains_mult("Another one of Hello World To Be sure it's a Hello, with a Heartily hello", "hello").value(), 3);
+    EXPECT_EQ(
+        codex::str::contains_mult("Another one of Hello World To Be sure it's a Hello, with a Heartily hello", "hello").
+        value(),
+        3);
     EXPECT_EQ(codex::str::contains_mult("", "Goodbye").error(), codex::StatusCode::NOTHING_TO_DO);
+}
+
+TEST(Str, ReplaceAll) {
+    EXPECT_EQ(codex::str::replace_all("Hello World", "World", "Earth"), "Hello Earth");
+    EXPECT_EQ(codex::str::replace_all("Hello World", "Hello", "Goodbye"), "Goodbye World");
+    EXPECT_EQ(codex::str::replace_all("", "Goodbye", "Hello"), "");
+    EXPECT_EQ(
+        codex::str::replace_all("Another one bites to dust with a super string so that all A are replaced", "a", "s"),
+        "Another one bites to dust with s super string so thst sll A sre replsced");
 }
