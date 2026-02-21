@@ -38,7 +38,7 @@ namespace codex::str {
      */
     [[nodiscard]] inline auto trim(const std::string& str) {
         std::string tmp = str;
-        tmp             = str::right_trim(str::left_trim(tmp));
+        tmp = str::right_trim(str::left_trim(tmp));
         return tmp;
     }
 
@@ -84,7 +84,7 @@ namespace codex::str {
     [[nodiscard]] inline std::expected<std::vector<std::string>, StatusCode> split(
         const std::string& str, const char delimiter) {
         std::vector<std::string> result;
-        std::stringstream        ss(str);
+        std::stringstream ss(str);
         while (ss.good()) {
             std::string substr;
             std::getline(ss, substr, delimiter);
@@ -104,7 +104,7 @@ namespace codex::str {
      * @return The joined string, if no join is performed, returns StatusCode::NOTHING_TO_DO.
      */
     [[nodiscard]] inline std::expected<std::string, StatusCode> join(const std::vector<std::string>& strs,
-                                                                     const char                      delimiter) {
+                                                                     const char delimiter) {
         std::string result;
         for (const std::string& s : strs) {
             result += s != strs.back() ? s + delimiter : s;
@@ -126,9 +126,9 @@ namespace codex::str {
             return std::unexpected(StatusCode::NOTHING_TO_DO);
         if (substr.empty())
             return std::unexpected(StatusCode::INVALID_INPUT);
-        size_t            count    = 0;
+        size_t count = 0;
         const std::string haystack = str::to_lower(str);
-        const std::string needle   = str::to_lower(substr);
+        const std::string needle = str::to_lower(substr);
         for (size_t i = 0; (i = haystack.find(needle, i)) != std::string::npos; ++i) {
             ++count;
         }
@@ -163,7 +163,7 @@ namespace codex::str {
         }
         const int whole = d > 0 ? std::floor(d) : std::ceil(d);
         int decimal = static_cast<int>(std::roundf((d - static_cast<float>(whole)) * std::pow(10.0f, precision)));
-        if ( d < 0 )
+        if (d < 0)
             decimal = std::abs(decimal);
         std::stringstream ss;
         ss << whole << "." << std::setfill('0') << std::setw(precision) << decimal;

@@ -2,8 +2,6 @@ BasedOnStyle: google
 Language: Cpp
 AllowAllArgumentsOnNextLine: false
 AlignAfterOpenBracket: true
-AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: true
 BinPackArguments: false
 ColumnLimit: 120
 NamespaceIndentation: All
