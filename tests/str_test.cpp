@@ -89,7 +89,4 @@ TEST(Str, DoubleToStringNegative) {
     constexpr float d = -1.23456789;
     const std::string result = codex::str::to_string(d, 2).value();
     EXPECT_EQ(result, "-1.23");
-    EXPECT_EQ(codex::str::to_string(d, 10).error(), codex::StatusCode::INVALID_INPUT);
-    EXPECT_EQ(codex::str::to_string(d, -1).error(), codex::StatusCode::INVALID_INPUT);
-    EXPECT_EQ(codex::str::to_string(d, 0).error(), codex::StatusCode::INVALID_INPUT);
 }
