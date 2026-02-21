@@ -17,31 +17,31 @@ each function. No dependencies are required. No exceptions are thrown.
 
 ## Installation
 
+### Option 1: Copy headers
+Copy the `include/` folder into your project and add it to your include paths.
+
+### Option 2: CMake (recommended)
+Add `codex` as a subdirectory or via your preferred dependency manager, then include headers from `include/`.
+
 ## Usage
+Let's say you want to use the string chapter. Then you would include the header file `str.hpp` and use the functions from there.
+The header file is self-contained, and if you would like to trim a string, you would use the function `trim`.
+Example:
+```cpp '
+#include <codex/str.hpp>
 
-## License
+int main() { 
+std::string s = " HeLLo ";
+// Functions like trim return a new string (they do not mutate the input).
+std::cout << codex::str::trim(s) << "\n";
 
-MIT License
-
-Copyright (c) 2026 Andreas Roghe
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+// Functions that can fail return std::expected.
+if (auto lowered = codex::str::to_lower(s); lowered.has_value()) {
+std::cout << lowered.value() << "\n";
+} else {
+std::cout << "to_lower failed with StatusCode=" << static_cast<int>(lowered.error()) << "\n";
+}
+````
 
 
 
