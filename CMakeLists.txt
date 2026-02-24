@@ -14,7 +14,11 @@ FetchContent_MakeAvailable(googletest)
 add_library(codex INTERFACE)
 target_include_directories(codex INTERFACE include)
 
-add_executable(codex_tests tests/str_test.cpp)
+add_executable(codex_tests
+        tests/test_main.cpp
+        tests/env_test.cpp
+        tests/str_test.cpp
+)
 target_link_libraries(codex_tests PRIVATE codex GTest::gtest_main)
 
 include(GoogleTest)
